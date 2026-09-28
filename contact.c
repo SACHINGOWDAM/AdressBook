@@ -8,6 +8,53 @@
 void listContacts(AddressBook *addressBook, int sortCriteria) 
 {
     // Sort contacts based on the choosen criteria
+    if(AddressBook->contactCount == 0) {
+        printf("No contacts to display.\n");
+        return;
+    }
+    else
+    {
+        switch(sortCriteria) {
+            case 1: // Sort by name
+                for(int i = 0; i < addressBook->contactCount - 1; i++) {
+                    for(int j = 0; j < addressBook->contactCount - i - 1; j++) {
+                        if(strcmp(addressBook->contacts[j].name, addressBook->contacts[j + 1].name) > 0) {
+                            Contact temp = addressBook->contacts[j];
+                            addressBook->contacts[j] = addressBook->contacts[j + 1];
+                            addressBook->contacts[j + 1] = temp;
+                        }
+                    }
+                }
+                break;
+            case 2: // Sort by phone number
+                for(int i = 0; i < addressBook->contactCount - 1; i++) {
+                    for(int j = 0; j < addressBook->contactCount - i - 1; j++) {
+                        if(strcmp(addressBook->contacts[j].phone, addressBook->contacts[j + 1].phone) > 0) {
+                            Contact temp = addressBook->contacts[j];
+                            addressBook->contacts[j] = addressBook->contacts[j + 1];
+                            addressBook->contacts[j + 1] = temp;
+                        }
+                    }
+                }
+                break;
+            case 3: // Sort by email
+                for(int i = 0; i < addressBook->contactCount - 1; i++) {
+                    for(int j = 0; j < addressBook->contactCount - i - 1; j++) {
+                        if(strcmp(addressBook->contacts[j].email, addressBook->contacts[j + 1].email) > 0) {
+                            Contact temp = addressBook->contacts[j];
+                            addressBook->contacts[j] = addressBook->contacts[j + 1];
+                            addressBook->contacts[j + 1] = temp;
+                        }
+                    }
+                }
+                break;
+            default:
+                printf("Invalid sorting criteria.\n");
+                return;
+        }
+    }
+
+
     
 }
 
@@ -31,7 +78,7 @@ void createContact(AddressBook *addressBook)
     int validemail(char *email);
 	/* Defining the logic to create a Contacts read name from user min of 2 should be alnum or sspace*/
     printf("Enter the name of the contact: ");
-    scanf(" %[^\n]s", addressBook->contacts[addressBook->contactCount].name);
+    scanf(" %[^\n]", addressBook->contacts[addressBook->contactCount].name);
     if(validname(addressBook->contacts[addressBook->contactCount].name))
     {
         printf("Enter the phone number of the contact: ");
@@ -39,7 +86,7 @@ void createContact(AddressBook *addressBook)
         if(validphone(addressBook->contacts[addressBook->contactCount].phone))
         {
             printf("Enter the email of the contact: ");
-            scanf(" %[^\n]", addressBook->contacts[addressBook->contactCount].email);
+            scanf(" %s", addressBook->contacts[addressBook->contactCount].email);//email should not have space in it
             if(validemail(addressBook->contacts[addressBook->contactCount].email))
             {
                 addressBook->contactCount++;
@@ -64,7 +111,7 @@ void createContact(AddressBook *addressBook)
         }
         for(int i = 0; i < len; i++)
         {
-            if(!isalnum(name[i]) && !isspace(name[i]))uus
+            if(!isalnum(name[i]) && !isspace(name[i]))
             {
                 return 0; // Invalid character in name
             }
@@ -89,7 +136,6 @@ void createContact(AddressBook *addressBook)
     }
     int validemail(char *email)
     {
-        int len = strlen(email);
         char *at = strchr(email, '@');
         char *dot = strrchr(email, '.');
         if(!at || !dot || at >= dot)

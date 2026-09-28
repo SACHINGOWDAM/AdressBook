@@ -31,7 +31,13 @@ int main() {
             case 4:
                 deleteContact(&addressBook);
                 break;
-            case 5:          
+            case 5:       
+                int sortChoice;
+                printf("Choose sorting criteria:\n");   
+                printf("1. Sort by name\n");
+                printf("2. Sort by phone number\n");
+                printf("3. Sort by email\n");
+                scanf("%d", &sortChoice);
                 listContacts(&addressBook, sortChoice);
                 break;
             case 6:
