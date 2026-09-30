@@ -4,11 +4,14 @@
 #include <ctype.h>
 #include "contact.h"
 #include "file.h"
-#include "populate.h"
+//#include "populate.h"
+int validname(char *name);
+int validphone(char *phone);
+int validemail(char *email);
 void listContacts(AddressBook *addressBook, int sortCriteria) 
 {
     // Sort contacts based on the choosen criteria
-    if(AddressBook->contactCount == 0) {
+    if(addressBook->contactCount == 0) {
         printf("No contacts to display.\n");
         return;
     }
@@ -61,21 +64,18 @@ void listContacts(AddressBook *addressBook, int sortCriteria)
 void initialize(AddressBook *addressBook) {
     addressBook->contactCount = 0;
     
-    // Load contacts from file during initialization (After files)
-    //loadContactsFromFile(addressBook);
+    //Load contacts from file during initialization (After files)
+    loadContactsFromFile(addressBook);
 }
 
 void saveAndExit(AddressBook *addressBook) {
-    saveContactsToFile(addressBook); // Save contacts to file
+    saveContactsToFile(addressBook);// Save contacts to file
     exit(EXIT_SUCCESS); // Exit the program
 }
 
 
 void createContact(AddressBook *addressBook)
 {
-    int validname(char *name);
-    int validphone(char *phone);
-    int validemail(char *email);
 	/* Defining the logic to create a Contacts read name from user min of 2 should be alnum or sspace*/
     printf("Enter the name of the contact: ");
     scanf(" %[^\n]", addressBook->contacts[addressBook->contactCount].name);
@@ -102,7 +102,12 @@ void createContact(AddressBook *addressBook)
             printf("Invalid phone number format. Contact creation failed.\n");
         }
     }
-    int validname(char *name)
+    else
+            {
+                printf("Invalid name format. Contact creation failed.\n");
+            }
+}
+int validname(char *name)
     {
         int len = strlen(name);
         if(len < 2)
@@ -116,6 +121,7 @@ void createContact(AddressBook *addressBook)
                 return 0; // Invalid character in name
             }
         }
+
         return 1; // Valid name
     }
     int validphone(char *phone)
@@ -124,6 +130,10 @@ void createContact(AddressBook *addressBook)
         if(len < 10 || len > 15)
         {
             return 0; // Phone number should be between 10 and 15 digits
+        }
+        if(phone[0] < 6 || phone[0] > 9)
+        {
+            return 0; // Phone number should start with a digit between 6 and 9
         }
         for(int i = 0; i < len; i++)
         {
@@ -136,16 +146,30 @@ void createContact(AddressBook *addressBook)
     }
     int validemail(char *email)
     {
-        char *at = strchr(email, '@');
-        char *dot = strrchr(email, '.');
-        if(!at || !dot || at >= dot)
+        int len=strlen(email);
+        int atcount=0;
+        if(len<7||!isalnum(email[0]) || strcmp(email+len-4,".com")!=0||email[len - 5] == '@')//
         {
-            return 0; // Invalid email format
+            return 0;
+        }
+        for(int i=0;email[i]!='\0';i++)
+        {
+            if(email[i]=='@')
+            {
+                atcount++;
+            }
+            if(isupper((unsigned char)email[i]))
+            {
+                printf("Error: email cannot be in Uppercase");
+                return 0;
+            }
+        }
+        if(atcount!=1)
+        {
+            return 0;
         }
         return 1; // Valid email
     }
-
-}
 
 void searchContact(AddressBook *addressBook) 
 {
