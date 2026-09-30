@@ -33,7 +33,7 @@ int main() {
                 break;
             case 5:       
                 int sortChoice;
-                printf("Choose sorting criteria:\n");   
+                printf("Choose sorting criteria to list the contacts:\n");   
                 printf("1. Sort by name\n");
                 printf("2. Sort by phone number\n");
                 printf("3. Sort by email\n");
