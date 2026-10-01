@@ -24,6 +24,7 @@ int main() {
                 break;
             case 2:
                 searchContact(&addressBook);
+                
                 break;
             case 3:
                 editContact(&addressBook);
