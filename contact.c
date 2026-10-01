@@ -5,9 +5,6 @@
 #include "contact.h"
 #include "file.h"
 //#include "populate.h"
-int validname(char *name, AddressBook *addressBook);
-int validphone(char *phone, AddressBook *addressBook);
-int validemail(char *email, AddressBook *addressBook);
 void listContacts(AddressBook *addressBook, int sortCriteria) 
 {
     // Sort contacts and display based on the choosen criteria
@@ -183,13 +180,13 @@ int validname(char *name, AddressBook *addressBook)
             if(isdigit(phone[i]))
             {
                 digitcount++;
-                if(digitcount!=10)
+            }
+        }
+        if(digitcount!=10)
                 {
                     printf("Phone number should be 10 digits.\n");
                     return 0; // Phone number should not exceed 10 digits
                 }
-            }
-        }
         //duplicate phone check
         for(int i = 0; i < addressBook->contactCount; i++)
         {
@@ -262,11 +259,9 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].name,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-2d %-15s\n",
                         ++serial,
-                    addressBook->contacts[i].name,
-                    addressBook->contacts[i].phone,
-                    addressBook->contacts[i].email);
+                    addressBook->contacts[i].name);
                 }
             }
             if(serial==0)
@@ -302,11 +297,9 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].phone,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-2d %-15s\n",
                         ++serial,
-                    addressBook->contacts[i].name,
-                    addressBook->contacts[i].phone,
-                    addressBook->contacts[i].email);
+                    addressBook->contacts[i].phone);
                 }
             }
             if(serial==0)
@@ -342,10 +335,8 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].email,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-2d %-25s\n",
                         ++serial,
-                    addressBook->contacts[i].name,
-                    addressBook->contacts[i].phone,
                     addressBook->contacts[i].email);
                 }
             }
@@ -632,5 +623,151 @@ if(addressBook->contactCount==0)
 
 void deleteContact(AddressBook *addressBook)
 {
-    
+    if(addressBook->contactCount==0)
+    {
+        printf("No contacts available to delete\n");
+        return ;
+    }
+    int choice;
+    char target[50];
+    int found[100];
+    int serial=0;
+    printf("Enter the choice you want to search the contact\n");
+    printf("1.Search by name\n2.Search by phone number\n3.Search by email\n ");
+    scanf("%d",&choice);
+    switch(choice)
+    {
+        case 1 :
+        printf("Enter the name of the contact you want to delete\n");
+        scanf(" %[^\n]",target);
+        printf("Contact Results\n");
+            for(int i=0;i<addressBook->contactCount;i++)
+            {
+                if(strstr(addressBook->contacts[i].name,target)!=NULL)
+                {
+                    found[serial]=i;
+                    printf("%-2d %-15s %-15s %-25s\n",
+                        ++serial,
+                    addressBook->contacts[i].name,
+                    addressBook->contacts[i].phone,
+                    addressBook->contacts[i].email);
+                }
+            }
+            if(serial==0)
+            {
+                printf("No contact found with the name %s\n",target);
+            }
+            else
+            {
+                printf("Enter the serial number of the contact you want to delete\n");
+                int serialchoice;
+                scanf("%d",&serialchoice);
+                if(serialchoice>0 && serialchoice<=serial)
+                {
+                    int index=found[serialchoice-1];
+                    // Shift contacts to remove the selected contact
+                    for(int i=index;i<addressBook->contactCount-1;i++)
+                    {
+                        addressBook->contacts[i]=addressBook->contacts[i+1];
+                    }
+                    addressBook->contactCount--;
+                    printf("Contact deleted successfully!\n");
+                }
+                else
+                {
+                    printf("Invalid serial number.\n");
+                }
+            }
+            
+        break;
+        case 2 :
+        printf("Enter the phone number of the contact you want to delete\n");
+        scanf(" %[^\n]",target);
+        printf("Contact Results\n");
+            for(int i=0;i<addressBook->contactCount;i++)
+            {
+                if(strstr(addressBook->contacts[i].phone,target)!=NULL)
+                {
+                    found[serial]=i;
+                    printf("%-2d %-15s %-15s %-25s\n",
+                        ++serial,
+                    addressBook->contacts[i].name,
+                    addressBook->contacts[i].phone,
+                    addressBook->contacts[i].email);
+                }
+            }
+            if(serial==0)
+            {
+                printf("No contact found with the phone number %s\n",target);
+            }
+            else
+            {
+                printf("Enter the serial number of the contact you want to delete\n");
+                int serialchoice;
+                scanf("%d",&serialchoice);
+                if(serialchoice>0 && serialchoice<=serial)
+                {
+                    int index=found[serialchoice-1];
+                    // Shift contacts to remove the selected contact
+                    for(int i=index;i<addressBook->contactCount-1;i++)
+                    {
+                        addressBook->contacts[i]=addressBook->contacts[i+1];
+                    }
+                    addressBook->contactCount--;
+                    printf("Contact deleted successfully!\n");
+                }
+                else
+                {
+                    printf("Invalid serial number.\n");
+                }
+            }
+
+        break;
+        case 3 :
+        printf("Enter the email of the contact you want to delete\n");
+        scanf(" %s",target);
+        printf("Contact Results\n");
+            for(int i=0;i<addressBook->contactCount;i++)
+            {
+                if(strstr(addressBook->contacts[i].email,target)!=NULL)
+                {
+                    found[serial]=i;
+                    printf("%-2d %-15s %-15s %-25s\n",
+                        ++serial,
+                    addressBook->contacts[i].name,
+                    addressBook->contacts[i].phone,
+                    addressBook->contacts[i].email);
+                }
+            }
+            if(serial==0)
+            {
+                printf("No contact found with the email %s\n",target);
+            }
+            else
+            {
+                printf("Enter the serial number of the contact you want to delete\n");
+                int serialchoice;
+                scanf("%d",&serialchoice);
+                if(serialchoice>0 && serialchoice<=serial)
+                {
+                    int index=found[serialchoice-1];
+                    // Shift contacts to remove the selected contact
+                    for(int i=index;i<addressBook->contactCount-1;i++)
+                    {
+                        addressBook->contacts[i]=addressBook->contacts[i+1];
+                    }
+                    addressBook->contactCount--;
+                    printf("Contact deleted successfully!\n");
+                }
+                else
+                {
+                    printf("Invalid serial number.\n");
+                }
+            }
+        break;
+        default :
+        printf("Invalid Choice\n");
+        return;
+        break;
+    }
 }

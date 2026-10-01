@@ -12,6 +12,7 @@ void saveContactsToFile(AddressBook *addressBook) {
     {
         fprintf(file,"%s,%s,%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
     }
+    printf("Contacts saved successfully\n");
   fclose(file);
 }
 
@@ -28,5 +29,6 @@ void loadContactsFromFile(AddressBook *addressBook) {
             addressBook->contacts[i].phone, 
             addressBook->contacts[i].email);
     }
+    printf("Contacts loaded successfully\n");
     fclose(file);
 }
