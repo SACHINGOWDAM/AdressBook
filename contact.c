@@ -5,7 +5,7 @@
 #include "contact.h"
 #include "file.h"
 //#include "populate.h"
-void listContacts(AddressBook *addressBook, int sortCriteria) 
+void listContacts(AddressBook *addressBook) 
 {
     // Sort contacts and display based on the choosen criteria
     if(addressBook->contactCount == 0) {
@@ -14,6 +14,12 @@ void listContacts(AddressBook *addressBook, int sortCriteria)
     }
     else
     {
+        int sortCriteria;
+                printf("Choose sorting criteria to list the contacts:\n");   
+                printf("1. Sort by name\n");
+                printf("2. Sort by phone number\n");
+                printf("3. Sort by email\n");
+                scanf("%d", &sortCriteria);
         switch(sortCriteria) {
             case 1: // Sort by name
                 for(int i = 0; i < addressBook->contactCount - 1; i++) {
@@ -25,14 +31,6 @@ void listContacts(AddressBook *addressBook, int sortCriteria)
                         }
                     }
                 }
-                printf("\n%-64s\n","--- Contact List ---");
-                    for (int i = 0; i < addressBook->contactCount; i++) 
-                    {
-                        printf("|Name: %-20s | Phone: %-15s | Email: %-25s|\n", 
-                                addressBook->contacts[i].name, 
-                                addressBook->contacts[i].phone, 
-                                addressBook->contacts[i].email);
-                    }
                 break;
             case 2: // Sort by phone number
                 for(int i = 0; i < addressBook->contactCount - 1; i++) {
@@ -44,14 +42,6 @@ void listContacts(AddressBook *addressBook, int sortCriteria)
                         }
                     }
                 }
-                printf("\n%-64s\n","--- Contact List ---");
-                    for (int i = 0; i < addressBook->contactCount; i++) 
-                    {
-                        printf("|Name: %-20s | Phone: %-15s | Email: %-25s|\n", 
-                                addressBook->contacts[i].name, 
-                                addressBook->contacts[i].phone, 
-                                addressBook->contacts[i].email);
-                    }
                 break;
             case 3: // Sort by email
                 for(int i = 0; i < addressBook->contactCount - 1; i++) {
@@ -63,19 +53,20 @@ void listContacts(AddressBook *addressBook, int sortCriteria)
                         }
                     }
                 }
-                printf("\n%-64s\n","--- Contact List ---");
-                    for (int i = 0; i < addressBook->contactCount; i++) 
-                    {
-                        printf("|Name: %-20s | Phone: %-15s | Email: %-25s|\n", 
-                                addressBook->contacts[i].name, 
-                                addressBook->contacts[i].phone, 
-                                addressBook->contacts[i].email);
-                    }
                 break;
             default:
                 printf("Invalid sorting criteria.\n");
                 return;
         }
+        printf("--- Contact List ---\n");
+                    for (int i = 0; i < addressBook->contactCount; i++) 
+                    {
+                        printf("|%3d|Name: %-20s | Phone: %-15s | Email: %-25s|\n", 
+                                i + 1,
+                                addressBook->contacts[i].name, 
+                                addressBook->contacts[i].phone, 
+                                addressBook->contacts[i].email);
+                    }
     }
 }
 
@@ -134,12 +125,14 @@ int validname(char *name, AddressBook *addressBook)
         int len = strlen(name);
         if(len < 2)
         {
+            printf("Name should be at least 2 characters long.\n");
             return 0; // Name should be at least 2 characters long
         }
         for(int i = 0; i < len; i++)
         {
             if(!isalnum(name[i]) && !isspace(name[i]))
             {
+                printf("Name should contain only alphanumeric characters and spaces.\n");
                 return 0; // Invalid character in name
             }
         }
@@ -204,6 +197,7 @@ int validname(char *name, AddressBook *addressBook)
         int atcount=0;
         if(len<7||!isalnum(email[0]) || strcmp(email+len-4,".com")!=0||email[len - 5] == '@')//
         {
+            printf("Invalid email format. Email should be at least 7 characters long, start with an alphanumeric character, contain exactly one '@', and end with '.com'.\n");
             return 0;
         }
         //duplicate email check
@@ -259,7 +253,7 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].name,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s\n",
+                    printf("%-3d %-20s\n",
                         ++serial,
                     addressBook->contacts[i].name);
                 }
@@ -267,24 +261,7 @@ void searchContact(AddressBook *addressBook)
             if(serial==0)
             {
                 printf("No contact found with the name %s\n",target);
-            }
-            else
-            {
-                printf("Enter the serial number of the contact you want to view\n");
-                int serialchoice;
-                scanf("%d",&serialchoice);
-                if(serialchoice>0 && serialchoice<=serial)
-                {
-                    int index=found[serialchoice-1];
-                    printf("Contact Details:\n");
-                    printf("Name: %s\n",addressBook->contacts[index].name);
-                    printf("Phone: %s\n",addressBook->contacts[index].phone);
-                    printf("Email: %s\n",addressBook->contacts[index].email);
-                }
-                else
-                {
-                    printf("Invalid serial number.\n");
-                }
+                return;
             }
             
         break;
@@ -297,7 +274,7 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].phone,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s\n",
+                    printf("%-3d %-15s\n",
                         ++serial,
                     addressBook->contacts[i].phone);
                 }
@@ -305,24 +282,7 @@ void searchContact(AddressBook *addressBook)
             if(serial==0)
             {
                 printf("No contact found with the phone number %s\n",target);
-            }
-            else
-            {
-                printf("Enter the serial number of the contact you want to view\n");
-                int serialchoice;
-                scanf("%d",&serialchoice);
-                if(serialchoice>0 && serialchoice<=serial)
-                {
-                    int index=found[serialchoice-1];
-                    printf("Contact Details:\n");
-                    printf("Name: %s\n",addressBook->contacts[index].name);
-                    printf("Phone: %s\n",addressBook->contacts[index].phone);
-                    printf("Email: %s\n",addressBook->contacts[index].email);
-                }
-                else
-                {
-                    printf("Invalid serial number.\n");
-                }
+                return;
             }
 
         break;
@@ -335,7 +295,7 @@ void searchContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].email,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-25s\n",
+                    printf("%-3d %-25s\n",
                         ++serial,
                     addressBook->contacts[i].email);
                 }
@@ -343,30 +303,31 @@ void searchContact(AddressBook *addressBook)
             if(serial==0)
             {
                 printf("No contact found with the email %s\n",target);
-            }
-            else
-            {
-                printf("Enter the serial number of the contact you want to view\n");
-                int serialchoice;
-                scanf("%d",&serialchoice);
-                if(serialchoice>0 && serialchoice<=serial)
-                {
-                    int index=found[serialchoice-1];
-                    printf("Contact Details:\n");
-                    printf("Name: %s\n",addressBook->contacts[index].name);
-                    printf("Phone: %s\n",addressBook->contacts[index].phone);
-                    printf("Email: %s\n",addressBook->contacts[index].email);
-                }
-                else
-                {
-                    printf("Invalid serial number.\n");
-                }
+                return;
             }
         break;
         default :
         printf("Invalid Choice\n");
         return;
         break;
+    }
+    if(serial>0)
+    {
+        printf("Enter the serial number of the contact you want to view\n");
+        int serialchoice;
+        scanf("%d",&serialchoice);
+        if(serialchoice>0 && serialchoice<=serial)
+        {
+            int index=found[serialchoice-1];
+            printf("Contact Details:\n");
+            printf("Name: %s\n",addressBook->contacts[index].name);
+            printf("Phone: %s\n",addressBook->contacts[index].phone);
+            printf("Email: %s\n",addressBook->contacts[index].email);
+        }
+        else
+        {
+            printf("Invalid serial number.\n");
+        }
     }
 }
 
@@ -395,7 +356,7 @@ if(addressBook->contactCount==0)
                 if(strstr(addressBook->contacts[i].name,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-3d %-20s %-15s %-25s\n",
                         ++serial,
                     addressBook->contacts[i].name,
                     addressBook->contacts[i].phone,
@@ -479,7 +440,7 @@ if(addressBook->contactCount==0)
                 if(strstr(addressBook->contacts[i].phone,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-3d %-20s %-15s %-25s\n",
                         ++serial,
                     addressBook->contacts[i].name,
                     addressBook->contacts[i].phone,
@@ -646,7 +607,7 @@ void deleteContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].name,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-3d %-20s %-15s %-25s\n",
                         ++serial,
                     addressBook->contacts[i].name,
                     addressBook->contacts[i].phone,
@@ -689,7 +650,7 @@ void deleteContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].phone,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-3d %-20s %-15s %-25s\n",
                         ++serial,
                     addressBook->contacts[i].name,
                     addressBook->contacts[i].phone,
@@ -732,7 +693,7 @@ void deleteContact(AddressBook *addressBook)
                 if(strstr(addressBook->contacts[i].email,target)!=NULL)
                 {
                     found[serial]=i;
-                    printf("%-2d %-15s %-15s %-25s\n",
+                    printf("%-3d %-20s %-15s %-25s\n",
                         ++serial,
                     addressBook->contacts[i].name,
                     addressBook->contacts[i].phone,

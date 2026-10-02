@@ -14,8 +14,7 @@ int main() {
         printf("4. Delete contact\n");
         printf("5. List all contacts\n");
     	printf("6. Save contacts\n");		
-        printf("7. Load contacts from file\n");
-        printf("8. Exit\n");
+        printf("7. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         
@@ -34,28 +33,19 @@ int main() {
                 deleteContact(&addressBook);
                 break;
             case 5:       
-                int sortChoice;
-                printf("Choose sorting criteria to list the contacts:\n");   
-                printf("1. Sort by name\n");
-                printf("2. Sort by phone number\n");
-                printf("3. Sort by email\n");
-                scanf("%d", &sortChoice);
-                listContacts(&addressBook, sortChoice);
+                listContacts(&addressBook);
                 break;
             case 6:
                 printf("Saving...\n");
                 saveContactsToFile(&addressBook);
                 break;
             case 7:
-                printf("Loading contacts from file...\n");
-                loadContactsFromFile(&addressBook);   
-            case 8:
                 printf("Exiting...\n");
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 8);
+    } while (choice != 7);
     
        return 0;
 }
